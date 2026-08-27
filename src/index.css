@@ -1,0 +1,316 @@
+@import url("https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap");
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* =========================================================
+   PHOTO OP THEME
+   ========================================================= */
+
+@theme {
+  /* Main PhotoOp Colors */
+  --color-primary-color: #e53935;
+  --color-background: #ffffff;
+  --color-secondary-color: #1f2937;
+  --color-base-color: #101828;
+  --color-anchor: #e53935;
+
+  /* Supporting Colors */
+  --color-highlight: #6a7282;
+  --color-input-color: #1f2937;
+  --color-error: #dd1122;
+  --color-success: #00c566;
+  --color-warning: #facc15;
+
+  /* PhotoOp Specific */
+  --color-photoop-primary: #e53935;
+  --color-photoop-dark: #1f2937;
+  --color-photoop-gray: #6b7280;
+  --color-photoop-red: #e53935;
+  --color-photoop-border: rgba(240, 240, 240, 0.19);
+  --color-photoop-white: #ffffff;
+}
+
+html,
+body {
+  font-family: "Figtree", sans-serif;
+  scroll-behavior: smooth;
+  background-color: #ffffff;
+}
+
+/* =========================================================
+   SCROLLBAR
+   ========================================================= */
+
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e53935;
+  margin-left: 2px;
+  margin-right: 2px;
+  border-radius: 0px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: #ffffff;
+}
+
+/* =========================================================
+   SIDEBAR SCROLLBAR
+   ========================================================= */
+
+.sidebar-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-thumb {
+  background: #e53935;
+  border-radius: 9999px;
+}
+
+.sidebar-scroll::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+th {
+  border-bottom: 0px solid #28314e !important;
+}
+
+/* =========================================================
+   SWIPER
+   ========================================================= */
+
+.swiper-pagination-bullet {
+  width: 15px !important;
+  height: 15px !important;
+  background-color: #28314e !important;
+}
+
+/* =========================================================
+   NUMBER INPUT
+   ========================================================= */
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* =========================================================
+   ACTIVE
+   ========================================================= */
+
+.active {
+  color: #f9f9f9 !important;
+}
+
+/* =========================================================
+   TAILWIND / SHADCN THEME
+   ========================================================= */
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+
+  --color-destructive: var(--destructive);
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+}
+
+/* =========================================================
+   LIGHT MODE
+   ========================================================= */
+
+:root {
+  --radius: 0.625rem;
+
+  /* Background & Foreground */
+  --background: #ffffff;
+  --foreground: #101828;
+
+  /* Card */
+  --card: #ffffff;
+  --card-foreground: #101828;
+
+  /* Popover */
+  --popover: #ffffff;
+  --popover-foreground: #101828;
+
+  /* Primary */
+  --primary: #e53935;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #1f2937;
+  --secondary-foreground: #ffffff;
+
+  /* Muted */
+  --muted: #6b7280;
+  --muted-foreground: #6a7282;
+
+  /* Accent */
+  --accent: #6b7280;
+  --accent-foreground: #ffffff;
+
+  /* Destructive */
+  --destructive: #dd1122;
+
+  /* Border */
+  --border: rgba(240, 240, 240, 0.19);
+
+  /* Input */
+  --input: #1f2937;
+
+  /* Ring */
+  --ring: #e53935;
+
+  /* Charts */
+  --chart-1: #28314e;
+  --chart-2: #6b7280;
+  --chart-3: #00c566;
+  --chart-4: #facc15;
+  --chart-5: #dd1122;
+
+  /* Sidebar */
+  --sidebar: #ffffff;
+  --sidebar-foreground: #28314e;
+
+  --sidebar-primary: #e53935;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: #fdecea;
+  --sidebar-accent-foreground: #e53935;
+
+  --sidebar-border: #e5e7eb;
+  --sidebar-ring: #e53935;
+}
+
+/* =========================================================
+   DARK MODE
+   ========================================================= */
+
+.dark {
+  /* Background & Foreground */
+  --background: #1f2937;
+  --foreground: #ffffff;
+
+  /* Card */
+  --card: #1f2937;
+  --card-foreground: #ffffff;
+
+  /* Popover */
+  --popover: #1f2937;
+  --popover-foreground: #ffffff;
+
+  /* Primary */
+  --primary: #e53935;
+  --primary-foreground: #ffffff;
+
+  /* Secondary */
+  --secondary: #6b7280;
+  --secondary-foreground: #ffffff;
+
+  /* Muted */
+  --muted: #6b7280;
+  --muted-foreground: #ffffff;
+
+  /* Accent */
+  --accent: #6b7280;
+  --accent-foreground: #ffffff;
+
+  /* Destructive */
+  --destructive: #dd1122;
+
+  /* Border */
+  --border: rgba(240, 240, 240, 0.19);
+
+  /* Input */
+  --input: #28314e;
+
+  /* Ring */
+  --ring: #e53935;
+
+  /* Charts */
+  --chart-1: #28314e;
+  --chart-2: #6b7280;
+  --chart-3: #00c566;
+  --chart-4: #facc15;
+  --chart-5: #dd1122;
+
+  /* Sidebar */
+  --sidebar: #1f2937;
+  --sidebar-foreground: #ffffff;
+
+  --sidebar-primary: #e53935;
+  --sidebar-primary-foreground: #ffffff;
+
+  --sidebar-accent: rgba(229, 57, 53, 0.15);
+  --sidebar-accent-foreground: #ff6f6b;
+
+  --sidebar-border: rgba(240, 240, 240, 0.19);
+  --sidebar-ring: #e53935;
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
