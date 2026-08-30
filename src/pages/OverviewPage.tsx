@@ -2,7 +2,6 @@ import BookingOverview from "@/Components/Dashboard/Overview/BookingOverview";
 import IncomeOverview from "@/Components/Dashboard/Overview/IncomeOverview";
 import OverviewCards from "@/Components/Dashboard/Overview/OverviewCards";
 import RecentUser from "@/Components/Dashboard/Overview/RecentUser";
-import UserOverview from "@/Components/Dashboard/Overview/UserOverview";
 
 const Overview = () => {
 
