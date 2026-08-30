@@ -48,12 +48,12 @@ const ForgotPassword = () => {
         );
         if (res?.statusCode === 200) {
             form.reset();
-            Cookies.set("minoDashboard_forgetToken", res.data.forgetToken, {
+            Cookies.set("photoop_forgetToken", res.data.forgetToken, {
                 path: "/",
                 expires: 1,
             });
             Cookies.set(
-                "minoDashboard_forgetEmail",
+                "photoop_forgetEmail",
                 JSON.stringify(data.email),
                 {
                     path: "/",

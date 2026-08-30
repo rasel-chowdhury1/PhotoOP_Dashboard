@@ -13,7 +13,7 @@ const profileApi = baseApi.injectEndpoints({
     updateProfile: builder.mutation({
       query: (req) => {
         return {
-          url: `/users/update-my-profile`,
+          url: `/users/admin/update-my-profile`,
           method: "PATCH",
           body: req.body, // Passing the body from the request
         };

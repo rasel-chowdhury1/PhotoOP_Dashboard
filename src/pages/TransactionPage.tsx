@@ -38,9 +38,12 @@ const TransactionPage = () => {
         searchTerm: search || undefined,
         // status: filterStatus,
     }, { refetchOnMountOrArgChange: true });
-
-    const transactions: ITransaction[] = data?.data ?? [];
-    const total = data?.meta?.total ?? 0;
+    
+    if(!isFetching){
+        console.log("transaction data =>>> ", data)
+    }
+    const transactions: ITransaction[] = data?.data?.result ?? [];
+    const total = data?.data?.meta?.total ?? 0;
 
     const handleOpenView = (record: ITransaction) => {
         setCurrentRecord(record);

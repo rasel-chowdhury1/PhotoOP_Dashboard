@@ -14,7 +14,7 @@ const OTPVerify = () => {
   const [otp, setOtp] = useState("");
 
   const forgottenEmail = JSON.parse(
-    Cookies.get("minoDashboard_forgetEmail") || "null"
+    Cookies.get("photoop_forgetEmail") || "null"
   );
 
   const [otpMatch] = useForgetOtpVerifyMutation();
@@ -29,10 +29,10 @@ const OTPVerify = () => {
         "Verifying..."
       );
       if (res?.statusCode === 200) {
-        Cookies.remove("minoDashboard_forgetToken");
-        Cookies.remove("minoDashboard_forgetEmail");
+        Cookies.remove("photoop_forgetToken");
+        Cookies.remove("photoop_forgetEmail");
         Cookies.set(
-          "minoDashboard_forgetOtpMatchToken",
+          "photoop_forgetOtpMatchToken",
           res.data.forgetOtpMatchToken,
           {
             path: "/",

@@ -3,21 +3,22 @@ import { tagTypes } from "../../tagTypes";
 
 const settingApi = baseApi.injectEndpoints({
   endpoints: (builder) => ({
-    getSetting: builder.query({
+    getSetting: builder.query<IApiSingleResponse<ISettingDocument>, string>({
       query: (path) => ({
         url: `/settings/${path}`,
         method: "GET",
       }),
       providesTags: [tagTypes.setting],
     }),
-    updateSetting: builder.mutation({
-      query: (data) => {
-        return {
-          url: `/settings`,
-          method: "PUT",
-          body: data, // Passing the body from the request
-        };
-      },
+    updateSetting: builder.mutation<
+      IApiSingleResponse<ISettingDocument>,
+      { body: IUpdateSettingPayload }
+    >({
+      query: ({ body }) => ({
+        url: `/settings`,
+        method: "PUT",
+        body,
+      }),
       invalidatesTags: [tagTypes.setting],
     }),
   }),

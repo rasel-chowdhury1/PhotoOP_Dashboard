@@ -14,6 +14,7 @@ export const tagTypes = {
   fare: "Fare",
   booking: "Booking",
   snapper: "Snapper",
+  faq: "Faq",
 };
 
 export const tagTypesList = [
@@ -32,4 +33,5 @@ export const tagTypesList = [
   tagTypes.fare,
   tagTypes.booking,
   tagTypes.snapper,
+  tagTypes.faq,
 ];

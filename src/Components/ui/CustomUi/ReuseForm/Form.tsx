@@ -29,6 +29,12 @@ import { Button } from "../../button";
 import { Calendar } from "../../calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "../../popover";
 import { format } from "date-fns";
+import JoditEditor from "jodit-react";
+
+const RICH_TEXT_BUTTONS = [
+  "paragraph", "bold", "italic", "underline", "strikethrough", "|",
+  "ul", "ol", "|", "link", "|", "align", "|", "undo", "redo",
+];
 
 type FormControlProps<
   TFieldValues extends FieldValues = FieldValues,
@@ -353,6 +359,33 @@ export const FormUpload: FormControlFunc<{
           value={value || []}
           onChange={onChange}
         />
+      )}
+    </FormBase>
+  );
+};
+
+export const FormRichText: FormControlFunc<{
+  placeholder?: string;
+  height?: number;
+}> = ({ placeholder, height = 350, ...props }) => {
+  return (
+    <FormBase {...props}>
+      {({ onChange, value }) => (
+        <div className="rounded-md border border-[#E5E5E5] overflow-hidden">
+          <JoditEditor
+            value={(value as string) || ""}
+            config={{
+              readonly: false,
+              height,
+              placeholder: placeholder || "Write your content here...",
+              toolbarAdaptive: false,
+              buttons: RICH_TEXT_BUTTONS,
+              askBeforePasteHTML: false,
+              askBeforePasteFromWord: false,
+            }}
+            onBlur={(newContent) => onChange(newContent)}
+          />
+        </div>
       )}
     </FormBase>
   );

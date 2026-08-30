@@ -42,3 +42,17 @@ interface IApiListResponse<T> {
     meta: IMeta;
     data: T[]
 }
+
+/**
+ * Flat single-object response — data is the entity itself, no list/meta wrapping.
+ *
+ * @example
+ * type ISettingResponse = IApiSingleResponse<ISettingDocument>;
+ * // response.data.content
+ */
+interface IApiSingleResponse<T> {
+    success: boolean;
+    statusCode: number;
+    message: string;
+    data: T;
+}

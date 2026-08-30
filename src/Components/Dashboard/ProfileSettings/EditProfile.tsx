@@ -96,7 +96,7 @@ const EditProfile = () => {
     if (value.length > 0) {
       formData.append("profileImage", value[0].file);
     }
-    formData.append("data", JSON.stringify({ name: data.fullName }));
+    formData.append("data", JSON.stringify({ fullName: data.fullName }));
     const res = await tryCatchWrapper(
       updateProfile,
       { body: formData },

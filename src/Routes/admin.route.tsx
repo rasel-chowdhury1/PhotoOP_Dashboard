@@ -17,12 +17,17 @@ import {
   HandCoins,
   PiggyBank,
   Settings,
+  FileText,
   // Users kept for Customers
 } from "lucide-react";
 import TransactionPage from "@/pages/TransactionPage";
 import WithdrawRequestsPage from "@/pages/WithdrawRequestsPage";
 import PayoutMethodsPage from "@/pages/PayoutMethodsPage";
 import ServiceChargePage from "@/pages/ServiceChargePage";
+import PrivacyPolicyPage from "@/pages/Documents/PrivacyPolicyPage";
+import TermsConditionsPage from "@/pages/Documents/TermsConditionsPage";
+import AboutUsPage from "@/pages/Documents/AboutUsPage";
+import FaqPage from "@/pages/Documents/FaqPage";
 
 export const adminRoutes = [
   {
@@ -123,6 +128,32 @@ export const adminRoutes = [
       //   icon: Tag,
       //   element: <PromoPage />,
       // },
+      {
+        title: "Documents",
+        icon: FileText,
+        items: [
+          {
+            title: "Privacy Policy",
+            url: "documents/privacy-policy",
+            element: <PrivacyPolicyPage />,
+          },
+          {
+            title: "Terms & Conditions",
+            url: "documents/terms-conditions",
+            element: <TermsConditionsPage />,
+          },
+          {
+            title: "About Us",
+            url: "documents/about-us",
+            element: <AboutUsPage />,
+          },
+          {
+            title: "FAQ",
+            url: "documents/faq",
+            element: <FaqPage />,
+          },
+        ],
+      },
       {
         title: "Profile Settings",
         url: "profile-settings",

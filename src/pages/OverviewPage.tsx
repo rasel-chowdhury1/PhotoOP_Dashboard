@@ -15,9 +15,8 @@ const Overview = () => {
                 </div>
 
                 <div className="flex flex-col lg:flex-row gap-5 mt-8">
-                    {/* <BookingOverview />
-                     */}
-                    <UserOverview />
+                    <BookingOverview />
+                    {/* <UserOverview /> */}
                     <IncomeOverview />
                 </div>
 

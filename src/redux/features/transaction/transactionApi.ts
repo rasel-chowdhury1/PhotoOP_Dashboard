@@ -4,7 +4,7 @@ import { tagTypes } from "../../tagTypes";
 const transactionApi = baseApi.injectEndpoints({
     endpoints: (builder) => ({
         GetTransactions: builder.query<
-            IApiListResponse<ITransaction>,
+            IApiResponse<ITransaction>,
             { page: number; limit: number; searchTerm?: string }
         >({
             query: ({ page, limit, searchTerm }) => ({
