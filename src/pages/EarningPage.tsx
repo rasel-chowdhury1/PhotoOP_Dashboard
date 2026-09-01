@@ -1,6 +1,7 @@
 import ViewEarningModal from "@/Components/Dashboard/EarningPage/ViewEarningModal";
 import PageWraper from "@/Components/ui/CustomUi/PageWraper";
 import ReusableTable, { Column } from "@/Components/ui/CustomUi/ReuseableTable";
+import ReusableTabs from "@/Components/ui/CustomUi/ReusableTabs";
 import ReuseSearchInput from "@/Components/ui/CustomUi/ReuseForm/ReuseSearchInput";
 import { ReusableTooltip } from "@/Components/ui/CustomUi/ReusableTooltip";
 import Tag from "@/Components/ui/CustomUi/ReuseTag";
@@ -13,56 +14,18 @@ import {
     HiOutlineReceiptPercent,
     HiOutlineBanknotes,
     HiOutlineClipboardDocumentList,
+    HiOutlineServerStack,
+    HiOutlineCreditCard,
+    HiOutlineChartBarSquare,
 } from "react-icons/hi2";
 
-// ---- Types matching the new API response ----
-interface IEarningUser {
-    _id: string;
-    fullName: string;
-    email: string;
-    profileImage?: string;
-}
+const formatLabel = (value?: string | null) =>
+    value ? value.charAt(0) + value.slice(1).toLowerCase() : "—";
 
-interface IEarningPackage {
-    _id: string;
-    packageName: string;
-    price: number;
-}
-
-interface IEarningPaymentInfo {
-    _id: string;
-    paymentNumber: string;
-    amount: number;
-    currency: string;
-    gateway: string;
-    checkoutSessionId?: string;
-    transactionId: string;
-    status: "SUCCEEDED" | "PENDING" | "FAILED" | string;
-    paidAt: string;
-}
-
-export interface IBookingEarning {
-    _id: string;
-    bookingId: string;
-    userId: IEarningUser;
-    snapperId: IEarningUser;
-    packageId: IEarningPackage;
-    totalPrice: number;
-    serviceFee: number;
-    snapperEarning: number;
-    completedAt: string;
-    payment: IEarningPaymentInfo;
-}
-
-interface IEarningsResponseData {
-    totalRevenue: number;
-    adminCommission: number;
-    snapperEarning: number;
-    totalBookings: number;
-    bookings: IBookingEarning[];
-}
+type EarningTab = "bookings" | "storagePayments";
 
 const EarningPage = () => {
+    const [activeTab, setActiveTab] = useState<EarningTab>("bookings");
     const [search, setSearch] = useState("");
     const [currentPage, setCurrentPage] = useState(1);
     const [currentRecord, setCurrentRecord] = useState<IBookingEarning | null>(null);
@@ -75,10 +38,16 @@ const EarningPage = () => {
         searchTerm: search || undefined,
     }, { refetchOnMountOrArgChange: true });
 
-
-    const earnings: IEarningsResponseData | undefined = data?.data;
+    const earnings = data?.data;
     const bookings: IBookingEarning[] = earnings?.bookings ?? [];
-    const total = data?.data?.meta?.total ?? 0;
+    const storagePayments: IStoragePayment[] = earnings?.storagePayments ?? [];
+    const bookingsTotal = data?.meta?.total ?? 0;
+    const storagePaymentsTotal = earnings?.storagePaymentsMeta?.total ?? 0;
+
+    const handleTabChange = (tab: EarningTab) => {
+        setActiveTab(tab);
+        setCurrentPage(1);
+    };
 
     const handleOpenView = (record: IBookingEarning) => {
         setCurrentRecord(record);
@@ -90,7 +59,7 @@ const EarningPage = () => {
         setIsViewModalOpen(false);
     };
 
-    const columns: Column<IBookingEarning>[] = [
+    const bookingColumns: Column<IBookingEarning>[] = [
         {
             header: "#",
             accessorKey: "_id",
@@ -191,9 +160,75 @@ const EarningPage = () => {
         },
     ];
 
+    const storagePaymentColumns: Column<IStoragePayment>[] = [
+        {
+            header: "#",
+            accessorKey: "_id",
+            fixed: true,
+            width: 60,
+            render: (_: unknown, __: IStoragePayment, index: number) => (
+                <span className="font-medium text-gray-700">
+                    {(currentPage - 1) * limit + index + 1}
+                </span>
+            ),
+        },
+        {
+            header: "Payment No.",
+            accessorKey: "paymentNumber",
+            cellClassName: "font-medium font-mono",
+        },
+        {
+            header: "Snapper",
+            accessorKey: "snapperId",
+            render: (value: IEarningUser) => (
+                <span className="font-medium text-gray-800">
+                    {value?.fullName || "—"}
+                </span>
+            ),
+        },
+        {
+            header: "Storage Plan",
+            accessorKey: "storagePlan",
+            render: (value: string) => (
+                <span className="capitalize">{formatLabel(value)}</span>
+            ),
+        },
+        {
+            header: "Duration",
+            accessorKey: "durationMonths",
+            render: (value: number) => `${value} mo`,
+        },
+        {
+            header: "Amount",
+            accessorKey: "amount",
+            render: (value: number, record: IStoragePayment) => (
+                <span className="font-semibold">
+                    {value} {record.currency}
+                </span>
+            ),
+        },
+        {
+            header: "Gateway",
+            accessorKey: "gateway",
+            render: (value: string) => (
+                <span className="capitalize">{formatLabel(value)}</span>
+            ),
+        },
+        {
+            header: "Transaction ID",
+            accessorKey: "transactionId",
+            cellClassName: "font-mono text-xs text-gray-600",
+        },
+        {
+            header: "Paid At",
+            accessorKey: "paidAt",
+            render: (value: string) => (value ? formetDateAndTime(value) : "—"),
+        },
+    ];
+
     const statCards = [
         {
-            label: "Total Revenue",
+            label: "Booking Revenue",
             value: `$${earnings?.totalRevenue ?? 0}`,
             icon: <HiOutlineCurrencyDollar className="text-2xl" />,
             accent: "bg-blue-50 text-blue-600",
@@ -215,6 +250,24 @@ const EarningPage = () => {
             value: earnings?.totalBookings ?? 0,
             icon: <HiOutlineClipboardDocumentList className="text-2xl" />,
             accent: "bg-violet-50 text-violet-600",
+        },
+        {
+            label: "Storage Revenue",
+            value: `$${earnings?.storageRevenue ?? 0}`,
+            icon: <HiOutlineServerStack className="text-2xl" />,
+            accent: "bg-cyan-50 text-cyan-600",
+        },
+        {
+            label: "Total Storage Payments",
+            value: earnings?.totalStoragePayments ?? 0,
+            icon: <HiOutlineCreditCard className="text-2xl" />,
+            accent: "bg-rose-50 text-rose-600",
+        },
+        {
+            label: "Grand Total Revenue",
+            value: `$${earnings?.grandTotalRevenue ?? 0}`,
+            icon: <HiOutlineChartBarSquare className="text-2xl" />,
+            accent: "bg-indigo-50 text-indigo-600",
         },
     ];
 
@@ -239,24 +292,59 @@ const EarningPage = () => {
                 ))}
             </div>
 
-            <div className="flex gap-3 flex-wrap">
+            <div className="flex gap-3 flex-wrap mb-4">
                 <ReuseSearchInput
                     className="min-w-96"
-                    placeholder="Search by booking ID..."
+                    placeholder={
+                        activeTab === "bookings"
+                            ? "Search by booking ID..."
+                            : "Search by payment number..."
+                    }
                     setSearch={setSearch}
                     setPage={setCurrentPage}
                 />
             </div>
-            <ReusableTable<IBookingEarning>
-                data={bookings}
-                columns={columns}
-                pagination={true}
-                scroll={true}
-                currentPage={currentPage}
-                setCurrentPage={(page) => setCurrentPage(page)}
-                limit={limit}
-                total={total}
-                isLoading={isFetching}
+
+            <ReusableTabs
+                activeTab={activeTab}
+                onTabChange={handleTabChange}
+                align="left"
+                tabs={[
+                    {
+                        label: "Bookings",
+                        value: "bookings",
+                        content: (
+                            <ReusableTable<IBookingEarning>
+                                data={bookings}
+                                columns={bookingColumns}
+                                pagination={true}
+                                scroll={true}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                limit={limit}
+                                total={bookingsTotal}
+                                isLoading={isFetching}
+                            />
+                        ),
+                    },
+                    {
+                        label: "Storage Payments",
+                        value: "storagePayments",
+                        content: (
+                            <ReusableTable<IStoragePayment>
+                                data={storagePayments}
+                                columns={storagePaymentColumns}
+                                pagination={true}
+                                scroll={true}
+                                currentPage={currentPage}
+                                setCurrentPage={setCurrentPage}
+                                limit={limit}
+                                total={storagePaymentsTotal}
+                                isLoading={isFetching}
+                            />
+                        ),
+                    },
+                ]}
             />
 
             <ViewEarningModal

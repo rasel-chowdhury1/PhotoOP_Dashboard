@@ -5,44 +5,6 @@ import { formetDateAndTime } from "@/utils/dateFormet";
 import { AllImages } from "../../../../public/images/AllImages";
 import Modal from "@/Components/ui/CustomUi/Model";
 
-interface IEarningUser {
-    _id: string;
-    fullName: string;
-    email: string;
-    profileImage?: string;
-}
-
-interface IEarningPackage {
-    _id: string;
-    packageName: string;
-    price: number;
-}
-
-interface IEarningPaymentInfo {
-    _id: string;
-    paymentNumber: string;
-    amount: number;
-    currency: string;
-    gateway: string;
-    checkoutSessionId?: string;
-    transactionId: string;
-    status: "SUCCEEDED" | "PENDING" | "FAILED" | string;
-    paidAt: string;
-}
-
-interface IBookingEarning {
-    _id: string;
-    bookingId: string;
-    userId: IEarningUser;
-    snapperId: IEarningUser;
-    packageId: IEarningPackage;
-    totalPrice: number;
-    serviceFee: number;
-    snapperEarning: number;
-    completedAt: string;
-    payment: IEarningPaymentInfo;
-}
-
 interface ViewEarningModalProps {
     isOpen: boolean;
     handleCancle: () => void;
