@@ -13,6 +13,8 @@ export default defineConfig(({ command }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+
+  preview: { host: true, allowedHosts: ["dashboard.photooprps.com"], },
   // server: {
   //   proxy: {
   //     "/api": {
