@@ -24,7 +24,7 @@ const userApi = baseApi.injectEndpoints({
 
     banUser: builder.mutation<void, { userId: string; reason: string }>({
       query: ({ userId, reason }) => ({
-        url: `/users/ban/${userId}`,
+        url: `/users/block/${userId}`,
         method: "PATCH",
         body: { reason },
       }),
@@ -33,7 +33,7 @@ const userApi = baseApi.injectEndpoints({
 
     unbanUser: builder.mutation<void, { userId: string }>({
       query: ({ userId }) => ({
-        url: `/users/unban/${userId}`,
+        url: `/users/block/${userId}`,
         method: "PATCH",
       }),
       invalidatesTags: [tagTypes.customer, tagTypes.user, tagTypes.snapper],
@@ -47,6 +47,14 @@ const userApi = baseApi.injectEndpoints({
       }),
       invalidatesTags: [tagTypes.customer, tagTypes.user, tagTypes.snapper],
     }),
+
+    deleteUser: builder.mutation<void, { userId: string }>({
+      query: ({ userId }) => ({
+        url: `/users/delete/${userId}`,
+        method: "DELETE",
+      }),
+      invalidatesTags: [tagTypes.customer, tagTypes.user, tagTypes.snapper],
+    }),
   }),
 });
 
@@ -56,4 +64,5 @@ export const {
   useBanUserMutation,
   useUnbanUserMutation,
   useWarnUserMutation,
+  useDeleteUserMutation,
 } = userApi;

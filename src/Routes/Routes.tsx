@@ -15,6 +15,9 @@ import UpdatePassword from "@/pages/Auth/UpdatePassword";
 import NotFound from "@/Components/ui/CustomUi/NotFound/NotFound";
 import useUserData from "@/hooks/useUserData";
 import ProtectedRoute from "./ProtectedRoute";
+import SupportPage from "@/pages/Static/SupportPage";
+import DeleteAccountPage from "@/pages/Static/DeleteAccountPage";
+import StaticPrivacyPolicyPage from "@/pages/Static/PrivacyPolicyPage";
 
 // eslint-disable-next-line react-refresh/only-export-components
 function AuthRedirect() {
@@ -87,6 +90,18 @@ const router: RouteObject[] = [
   {
     path: "update-password",
     element: <UpdatePassword />,
+  },
+  {
+    path: "privacy-policy",
+    element: <StaticPrivacyPolicyPage />,
+  },
+  {
+    path: "support",
+    element: <SupportPage />,
+  },
+  {
+    path: "delete-account",
+    element: <DeleteAccountPage />,
   },
   {
     path: "*", // Catch-all for undefined routes

@@ -9,12 +9,14 @@ import ReuseRating from "@/Components/ui/CustomUi/ReuseRating";
 import Tag from "@/Components/ui/CustomUi/ReuseTag";
 import {
     useBanUserMutation,
+    useDeleteUserMutation,
     useGetCustomersQuery,
     useUnbanUserMutation,
     useWarnUserMutation,
 } from "@/redux/features/user/userApi";
 import { useState } from "react";
 import { IoEyeOutline } from "react-icons/io5";
+import { Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
 const statusTheme = (status: string): "success" | "error" | "warning" => {
@@ -30,7 +32,9 @@ const CustomerPage = () => {
     const [isViewModalOpen, setIsViewModalOpen] = useState(false);
     const [isBanModalOpen, setIsBanModalOpen] = useState(false);
     const [isWarnModalOpen, setIsWarnModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [currentRecord, setCurrentRecord] = useState<IUser | null>(null);
+    const [deleteRecord, setDeleteRecord] = useState<IUser | null>(null);
     const [search, setSearch] = useState("");
     const [filterStatus, setFilterStatus] = useState<string>("All");
     const [currentPage, setCurrentPage] = useState(1);
@@ -46,6 +50,7 @@ const CustomerPage = () => {
     const [banUser, { isLoading: isBanning }] = useBanUserMutation();
     const [unbanUser, { isLoading: isUnbanning }] = useUnbanUserMutation();
     const [warnUser, { isLoading: isWarning }] = useWarnUserMutation();
+    const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
     const customers: IUser[] = data?.data ?? [];
     const total = data?.meta?.total ?? 0;
@@ -96,6 +101,22 @@ const CustomerPage = () => {
             setCurrentRecord(null);
         } catch {
             toast.error("Failed to send warning");
+        }
+    };
+
+    const handleDeleteClick = (record: IUser) => {
+        setDeleteRecord(record);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDeleteConfirm = async (record: IUser) => {
+        try {
+            await deleteUser({ userId: record._id }).unwrap();
+            toast.success("Customer deleted successfully");
+            setIsDeleteModalOpen(false);
+            setDeleteRecord(null);
+        } catch {
+            toast.error("Failed to delete customer");
         }
     };
 
@@ -160,11 +181,17 @@ const CustomerPage = () => {
             header: "Action",
             accessorKey: "_id",
             render: (_: unknown, record: IUser) => (
-                <div>
+                <div className="flex items-center gap-3">
                     <ReusableTooltip content="View Details">
                         <IoEyeOutline
                             onClick={() => handleOpenView(record)}
                             className="text-2xl cursor-pointer"
+                        />
+                    </ReusableTooltip>
+                    <ReusableTooltip content="Delete">
+                        <Trash2
+                            onClick={() => handleDeleteClick(record)}
+                            className="size-4.5 text-destructive cursor-pointer"
                         />
                     </ReusableTooltip>
                 </div>
@@ -254,6 +281,23 @@ const CustomerPage = () => {
                 withReason={true}
                 reasonLabel="Warning Reason"
                 loading={isWarning}
+            />
+
+            {/* Delete Confirm Modal */}
+            <ConfirmModal<IUser>
+                open={isDeleteModalOpen}
+                onCancel={() => {
+                    setIsDeleteModalOpen(false);
+                    setDeleteRecord(null);
+                }}
+                currentRecord={deleteRecord}
+                onConfirm={handleDeleteConfirm}
+                title="Delete Customer"
+                description="Are you sure you want to delete this customer? This action cannot be undone."
+                confirmText="Delete"
+                variant="danger"
+                iconPreset="delete"
+                loading={isDeleting}
             />
         </PageWraper>
     );

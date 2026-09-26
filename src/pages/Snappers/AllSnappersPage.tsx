@@ -6,11 +6,15 @@ import ReuseRating from "@/Components/ui/CustomUi/ReuseRating";
 import ReuseFilterSelect from "@/Components/ui/CustomUi/ReuseForm/ReuseFilterSelect";
 import ReuseSearchInput from "@/Components/ui/CustomUi/ReuseForm/ReuseSearchInput";
 import Tag from "@/Components/ui/CustomUi/ReuseTag";
+import ConfirmModal from "@/Components/ui/CustomUi/Modal/ConfirmModal";
 import { getImageUrl } from "@/helpers/config/envConfig";
 import { useGetApprovedSnappersQuery } from "@/redux/features/snapper/snapperApi";
+import { useDeleteUserMutation } from "@/redux/features/user/userApi";
 import { formatDate } from "@/utils/dateFormet";
 import { useState } from "react";
 import { IoEyeOutline } from "react-icons/io5";
+import { Trash2 } from "lucide-react";
+import { toast } from "sonner";
 import { AllImages } from "../../../public/images/AllImages";
 
 const getSnapperProfile = (record: ISnapper): ISnapperProfile | null =>
@@ -30,6 +34,8 @@ const statusTheme = (status: string): "success" | "error" | "warning" => {
 const AllSnappersPage = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [currentRecord, setCurrentRecord] = useState<ISnapper | null>(null);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [deleteRecord, setDeleteRecord] = useState<ISnapper | null>(null);
     const [search, setSearch] = useState("");
     const [filterStatus, setFilterStatus] = useState<string>("All");
     const [currentPage, setCurrentPage] = useState(1);
@@ -40,6 +46,8 @@ const AllSnappersPage = () => {
         { page: currentPage, limit, searchTerm: search || undefined, status: filterStatus },
         { refetchOnMountOrArgChange: true }
     );
+
+    const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
 
     if(!isFetching) console.log("snapper data =>>> ", data)
@@ -54,6 +62,22 @@ const AllSnappersPage = () => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
         setCurrentRecord(null);
+    };
+
+    const handleDeleteClick = (record: ISnapper) => {
+        setDeleteRecord(record);
+        setIsDeleteModalOpen(true);
+    };
+
+    const handleDeleteConfirm = async (record: ISnapper) => {
+        try {
+            await deleteUser({ userId: record._id }).unwrap();
+            toast.success("Snapper deleted successfully");
+            setIsDeleteModalOpen(false);
+            setDeleteRecord(null);
+        } catch {
+            toast.error("Failed to delete snapper");
+        }
     };
 
     const columns: Column<ISnapper>[] = [
@@ -143,12 +167,20 @@ const AllSnappersPage = () => {
             header: "Action",
             accessorKey: "_id",
             render: (_: unknown, record: ISnapper) => (
-                <ReusableTooltip content="View Details">
-                    <IoEyeOutline
-                        onClick={() => handleOpenModal(record)}
-                        className="text-2xl cursor-pointer"
-                    />
-                </ReusableTooltip>
+                <div className="flex items-center gap-3">
+                    <ReusableTooltip content="View Details">
+                        <IoEyeOutline
+                            onClick={() => handleOpenModal(record)}
+                            className="text-2xl cursor-pointer"
+                        />
+                    </ReusableTooltip>
+                    <ReusableTooltip content="Delete">
+                        <Trash2
+                            onClick={() => handleDeleteClick(record)}
+                            className="size-4.5 text-destructive cursor-pointer"
+                        />
+                    </ReusableTooltip>
+                </div>
             ),
         },
     ];
@@ -189,6 +221,22 @@ const AllSnappersPage = () => {
                 handleCancle={handleCloseModal}
                 currentRecord={currentRecord}
                 approvalModal={false}
+            />
+
+            <ConfirmModal<ISnapper>
+                open={isDeleteModalOpen}
+                onCancel={() => {
+                    setIsDeleteModalOpen(false);
+                    setDeleteRecord(null);
+                }}
+                currentRecord={deleteRecord}
+                onConfirm={handleDeleteConfirm}
+                title="Delete Snapper"
+                description="Are you sure you want to delete this snapper? This action cannot be undone."
+                confirmText="Delete"
+                variant="danger"
+                iconPreset="delete"
+                loading={isDeleting}
             />
         </PageWraper>
     );
