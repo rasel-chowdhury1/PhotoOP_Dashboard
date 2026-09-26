@@ -97,18 +97,32 @@ const InfoRow = ({
     </div>
 );
 
-const DocImage = ({ src, alt, serverUrl }: { src?: string; alt: string; serverUrl: string }) => (
-    <div className="w-full h-44 bg-muted/30 rounded-xl overflow-hidden border border-border">
-        {src ? (
-            <ImagePreviewer src={`${serverUrl}${src}`} alt={alt} />
-        ) : (
-            <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
-                <FileText className="size-6" />
-                <span className="text-xs">{alt}</span>
-            </div>
-        )}
-    </div>
-);
+const DocImage = ({
+    src,
+    alt,
+    serverUrl,
+}: {
+    src?: string;
+    alt: string;
+    serverUrl: string;
+}) => {
+    const imageUrl = src?.startsWith("http")
+        ? src
+        : `${serverUrl}${src}`;
+
+    return (
+        <div className="w-full h-44 bg-muted/30 rounded-xl overflow-hidden border border-border">
+            {src ? (
+                <ImagePreviewer src={imageUrl} alt={alt} />
+            ) : (
+                <div className="w-full h-full flex flex-col items-center justify-center gap-2 text-muted-foreground">
+                    <FileText className="size-6" />
+                    <span className="text-xs">{alt}</span>
+                </div>
+            )}
+        </div>
+    );
+};
 
 type ConfirmAction = "ban" | "unban" | "warn" | "approve" | "reject" | null;
 
